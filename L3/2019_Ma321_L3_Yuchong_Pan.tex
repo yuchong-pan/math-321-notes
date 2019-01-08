@@ -1,0 +1,121 @@
+
+\documentclass[letterpaper, reqno,11pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{color,latexsym,amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{centernot}
+\usepackage{subcaption}
+\usepackage{extarrows}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\NN}{\mathbb{N}}
+\pagestyle{fancy}
+\lhead{Math 321 Lecture 3}
+\rhead{Yuchong Pan}
+\begin{document}
+\pagenumbering{arabic}
+\title{Math 321 Lecture 3}
+\author{Yuchong Pan}
+\date{January 7, 2019}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{exs}{Exercise}
+\newtheorem{remark}{Remark}
+\newtheorem{claim}{Claim}
+\maketitle
+%
+
+\section{Theorem and Consequences}
+
+\subsection{Theorem and Proof}
+
+\begin{thm} \label{thm:1}
+  \normalfont Let $(X, d)$ and $(Y, \rho)$ be metric spaces. Assume that $f_n : X \to Y$ is continuous for $n \geq 1$ and that $f_n \to f$ uniformly on $X$. Then $f$ is continuous on $X$.
+\end{thm}
+
+\begin{proof}
+  Fix $x_0 \in X$ and $\epsilon > 0$. We need to find $\delta = \delta(\epsilon, x_0) > 0$ such that
+  $$ \rho(f_(x), f(x_0)) < \epsilon $$
+  whenever $d(x, x_0) < \delta$.
+
+  {\bf Given:}
+  \begin{align*}
+    & \quad f_n \xrightarrow{n \to \infty} f \text{\bf ~uniformly on $X$} \\
+    \Leftrightarrow & \quad \sup_{x \in X} \rho(f_n(x), f(x)) \xrightarrow{n \to \infty} 0 \\
+    \Leftrightarrow & \quad \text{given any $\epsilon > 0$, there exists $N \geq 1$ such that} \\
+    & \quad \sup_{x \in X} \rho(f_n(x), f(x)) < \frac{\epsilon}{3} \qquad \text{whenever $n \geq N$}. \tag{*} \label{eq:star}
+  \end{align*}
+
+  Thus, by the triangular inequality applied twice,
+  $$ \rho(f(x), f(x_0)) \leq \underbrace{\rho(f(x), f_N(x))}_\text{(1)} + \underbrace{\rho(f_N(x), f_N(x_0))}_\text{(2)} + \underbrace{\rho(f_N(x_0), f(x_0))}_\text{(3)}. $$
+  Both (1) and (3) are buonded above by $\sup_{y \in X} \rho(f_N(y), f(y))$, which is $< \frac{\epsilon}{3}$ by (\ref{eq:star}).
+  Therefore,
+  $$ \rho(f(x), f(x_0)) < \frac{2\epsilon}{3} + \underbrace{\rho(f_N(x), f_N(x_0))}_\text{(2)} < \frac{2\epsilon}{3} + \frac{\epsilon}{3}, $$
+  if we choose $\delta = \delta_N(\epsilon, x_0) > 0$ such that $\rho(f_N(x), f_N(x_0)) < \frac{\epsilon}{3}$ whenever $d(x, x_0) < \delta_N$, by the $\epsilon$-$\delta$ definition of the continuity of $f_N$ at $x_0 \in X$.
+\end{proof}
+
+\noindent {\bf Example:} $k_n(x) = x^n$ is continuous on $[0, 1]$. Last time, we showed that $k_n \xrightarrow{\text{pointwise}} k$, where
+$$ k(x) = \left\{
+\begin{array}{ll}
+  0, & x \neq 1, \\
+  1, & x = 1,
+\end{array}
+\right. $$
+which is discontinuous.
+
+\subsection{Consequences}
+
+\begin{enumerate}
+\item Suppose $X = [a, b]$ and $Y = \RR \text{ or } \CC$. Then Theorem \ref{thm:1} implies that $C[a, b]$ is closed under {\bf uniform limits}.
+
+  That is, any sequence in $C[a, b]$, if it converges uniformly, admits the limit in $C[a, b]$; i.e., if $\{ f_n \} \subseteq C[a, b]$ and $f_n \xrightarrow{n \to \infty} f$ uniformly on $C[a, b]$, then $f \in C[a, b]$.
+
+  Note that $C[a, b]$ is closed in $\mathcal B[a, b] = \left\{ f : [a, b] \xrightarrow{\text{bounded}} \RR \text{ or } \CC \right\}$, a metric space with metric $d(f, g) = \sup_{x \in a[a, b]} |f(x) - g(x)|$.
+\item $C[a, b]$ is {\bf complete}.
+
+  That is, every Cauchy sequence $\{ f_n \} \subseteq C[a, b]$ (i.e., $\sup_{x \in [a, b]} |f_n(x) - f_m(x)| \xrightarrow{n, m \to \infty} 0$) converges.
+
+  \begin{enumerate}
+  \item[{\bf Step 1:}] Find a candidate for $\lim_{n \to \infty} f_n$.
+
+    {\bf Know:} $\lVert f_n - f_m \rVert_\infty = \sup_{x \in [a, b]} |f_n(x) - f_m(x)| \xrightarrow{n, m \to \infty} 0$.
+
+    Fix any $x \in [a, b]$. Then $\{ f_n(x) \}$ is a sequence of real (or complex) numbers, of $|f_n(x) - f_m(x)| \leq \lVert f_n - f_m \rVert_\infty \xrightarrow{n, m \to \infty} 0$.
+
+    Since $\RR$ and $\CC$ are complete, $\lim_{n \to \infty} f_n(x)$ exists for all $x \in [a, b]$. Set $f(x) = \lim_{n \to \infty} f_n(x)$. Note that $f$ is pointwise convergent so far.
+  \item[{\bf Step 2:}] We need to show:
+    \begin{enumerate}
+    \item $f_n \xrightarrow{n \to \infty} f$ uniformly on $[a, b]$, and
+    \item $f \in C[a, b]$.
+    \end{enumerate}
+    \begin{enumerate}
+    \item
+      \begin{align*}
+        \sup_{x \in [a, b]} |f_n(x) - f(x)| &= \sup_{x \in [a, b]} \left|f_n(x) - \lim_{m \to \infty} f_m(x)\right| \\
+        &= \sup_{x \in [a, b]} \left|\lim_{m \to \infty} (f_n(x) - f_m(x))\right| \\
+        &= \sup_{x \in [a, b]} \lim_{m \to \infty} |f_n(x) - f_m(x)| \\
+        &\leq \sup_{x \in [a, b]} \underbrace{\lim_{m \to \infty} \lVert f_n - f_m \rVert_\infty}_\text{does not depend on $x$} \\
+        &= \lim_{m \to \infty} \lVert f_n - f_m \rVert_\infty \\
+        &< \epsilon,
+      \end{align*}
+      if $n \geq N_\epsilon$ (using the fact that $\{ f_n \} \subseteq C[a, b]$ is Cauchy).
+    \item $f \in C[a, b]$ by Theorem \ref{thm:1}.
+    \end{enumerate}
+  \end{enumerate}
+\item {\bf Weierstrass $M$-test}:
+
+  Let $\{ g_n \} \subseteq \mathcal B(X) = \left\{ f : X \xrightarrow{\text{bounded}} \RR \text{ or } \CC \right\}$ be such that $\sum_{n = 1}^\infty \lVert g_n \rVert_\infty < \infty$.
+
+  Then $g = \sum_{n = 1}^\infty g_n$ converges uniformly on $X$; i.e., $\left\{ S_n(x) = \sum_{n = 1}^N g_n(x) : N \geq 1 \right\}$ converges uniformly on $X$. In addition, $g \in \mathcal B(X)$.
+
+  Moreover, if $\{ g_n \} \subseteq C(X)$, then $g \in C(X)$.
+\end{enumerate}
+
+\end{document}
