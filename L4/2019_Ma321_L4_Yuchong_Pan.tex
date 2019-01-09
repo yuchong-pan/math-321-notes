@@ -1,0 +1,166 @@
+
+\documentclass[letterpaper, reqno,11pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{color,latexsym,amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{centernot}
+\usepackage{subcaption}
+\usepackage{extarrows}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\NN}{\mathbb{N}}
+\pagestyle{fancy}
+\lhead{Math 321 Lecture 4}
+\rhead{Yuchong Pan}
+\begin{document}
+\pagenumbering{arabic}
+\title{Math 321 Lecture 4}
+\author{Yuchong Pan}
+\date{January 9, 2019}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{exs}{Exercise}
+\newtheorem{remark}{Remark}
+\newtheorem{claim}{Claim}
+\maketitle
+%
+
+\section{Equicontinuous Families of Functions}
+
+In Theorem 3.6, we saw that every bounded sequence of {\bf complex numbers} admits a convergent subsequence.
+
+~
+
+\noindent {\bf Question:} What about bounded sequences of {\bf functions}?
+
+\subsection{Pointwise and Uniform Boundedness}
+
+Let $\{ f_n \}$ be a sequence of functions defined on a set $E$.
+
+\begin{defn}
+  \normalfont We say that $\{ f_n \}$ is {\bf pointwise bounded} on $E$ if the sequence $\{ f_n(x) \}$ is bounded for every $x \in E$; i.e., there exists a finite-valued function $\phi$ defined on $E$ such that
+  $$ |f_n(x)| < \phi(x) \qquad (x \in E, n = 1, 2, 3, \ldots). $$
+\end{defn}
+
+\begin{remark}
+  \normalfont The bound $\phi(x)$ depends on $x$.
+\end{remark}
+
+\begin{defn}
+  \normalfont We say that $\{ f_n \}$ is {\bf uniformly bounded} on $E$ if there exists a number $M$ such that
+  $$ |f_n(x)| < M \qquad (x \in E, n = 1, 2, 3, \ldots). $$
+\end{defn}
+
+\begin{remark}
+  \normalfont The bound $M$ is independent of $x$.
+\end{remark}
+
+\subsection{Examples}
+
+\begin{enumerate}
+\item $f_n(x) = \sin(nx), x \in E = [0, 2 \pi], n = 1, 2, 3, \ldots$.
+  \begin{enumerate}
+  \item $|f_n(x)| = |\sin(nx)| \leq 1 < 2$. Thus, $\{ f_n \}$ is uniformly bounded.
+  \item We claim that $\{ f_n \}$ admits no subsequence $\{ f_{n_k} \}$ such that $\{ f_{n_k}(x) \}$ converges for every $x \in E = [0, 2\pi]$.
+    \begin{proof}
+      Suppose not; i.e., there exists a sequence $\{ n_k \}_{k = 1,2 , 3, \ldots}$ such that $\{ \sin(n_k x) \}$ converges for all $x \in E = [0, 2\pi]$.
+
+      By the Cauchy criterion (for convergence),
+      $$ \lim_{k \to \infty} (\sin(n_k x) - \sin(n_{k + 1} x)) = 0, \qquad x \in [0, 2\pi]. $$
+      Hence,
+      $$ \lim_{k \to \infty} (\sin(n_k x) - \sin(n_{k + 1} x))^2 = \left(\lim_{k \to \infty} (\sin(n_k x) - \sin(n_{k + 1} x)\right)^2 = 0^2 = 0. $$
+      
+      Lebesgue's Theorem states that if $f_n \to f$ pointwise as $n \to \infty$ and $|f_n(x)| < M$ for some $M \in \RR$, then $\lim_{n \to \infty} f_a^b f_n(x) dx = \int_a^b \lim_{n \to \infty} f_n(x) dx = \int_a^b f(x) dx$. Note that
+      \begin{enumerate}
+      \item $(\sin(n_k x) - \sin(n_{k + 1} x))^2 \to 0$ as $k \to \infty$;
+      \item $(\sin(n_k x) - \sin(n_{k + 1} x))^2 \leq (1 + 1)^2 = 4 < 5$.
+      \end{enumerate}
+      By Lebesgue's Theorem,
+      \begin{equation}\label{eq:1}
+        \begin{split}
+          & \quad \lim_{k \to \infty} \int_0^{2\pi} (\sin(n_k x) - \sin(n_{k + 1} x))^2 dx \\
+          &= \int_0^{2\pi} \lim_{k \to \infty} (\sin(n_k x) - \sin(n_{k + 1} x))^2 dx \\
+          &= \int_0^{2\pi} 0 dx \\
+          &= 0.
+        \end{split}
+      \end{equation}
+
+      On the other hand,
+      \begin{equation*}
+        \begin{split}
+          & \quad \int_0^{2\pi} (\sin(n_k x) - \sin(n_{k + 1} x))^2 dx \\
+          &= \int_0^{2\pi} \left(\sin^2(n_k x) + \sin^2(n_{k + 1} x) - 2 \sin(n_k x) \sin(n_{k + 1} x)\right) dx \\
+          &= \int_0^{2\pi} \left(\frac{1 - \cos(2n_k x)}{2} + \frac{1 - \cos(2n_{k + 1} x)}{2} - (\cos((n_k - n_{k + 1}) x) - \cos((n_k + n_{k + 1}) x))\right) dx \\
+          &= \int_0^{2\pi} 1 dx - \frac{1}{2} \int_0^{2\pi} \cos(2n_k x) dx - \frac{1}{2} \int_0^{2\pi} \cos(2n_{k + 1} x) dx \\
+          & \qquad - \int_0^{2\pi} \cos((n_k - n_{k + 1}) x) dx - \int_0^{2\pi} \cos((n_k + n_{k + 1}) x) dx
+        \end{split}
+      \end{equation*}
+      Note that $\int_0^{2\pi} \cos(mx) dx = \left.\frac{\sin(mx)}{m}\right|_0^{2\pi} = 0$ for $m \in \ZZ, m \neq 0$. Thus,
+      $$ \int_0^{2\pi} (\sin(n_k x) - \sin(n_{k + 1} x))^2 dx = \int_0^{2\pi} dx = 2\pi. $$
+      This implies that
+      \begin{equation}\label{eq:2}
+        \lim_{n \to \infty} \int_0^{2\pi} (\sin(n_k x) - \sin(n_{k + 1} x))^2 dx = 2\pi.
+      \end{equation}
+      \eqref{eq:1} contradicts \eqref{eq:2}.
+    \end{proof}
+  \end{enumerate}
+\item $f_n(x) = \frac{x^2}{x^2 + (1 - nx)^2}, x \in [0, 1], n = 1, 2, 3, \ldots$.
+  \begin{enumerate}
+  \item $|f_n(x)| \leq \frac{x^2}{x^2} = 1 < 2$. Thus, $\{ f_n \}$ is uniformly bounded.
+  \item We claim that no subsequences of $\{ f_n \}$ converges uniformly on $[0, 1]$.
+    \begin{proof}
+      Recall that $\{ f_n \}$ converges uniformly to a function $f$ on $E$ if for every $\epsilon > 0$, there exists an integer $N$ such that $n \geq N$ implies $|f_n(x) - f(x)| < \epsilon$ for all $x \in E$.
+
+      The negation of this definition states that $\{ f_n \}$ does not converge uniformly to $f$ on $E$ if there exists $\epsilon_0 > 0$ such that for every integer $n$, there exists $\mathcal N_0 \geq N$ such that $|f_{N_0}(x_0)  - f(x_0)| \geq \epsilon_0$ for some $x_0 \in E$.
+
+      Note that $\lim_{n \to \infty} f_n(x) = 0$ for $0 \leq x \leq 1$. Let $f(x) = 0$ for $x \in [0, 1]$. Note that $f_n\left(\frac{1}{n}\right) = \frac{x^2}{x^2} = 1$. Take $\epsilon = \frac{1}{2}$ and $x_0 = \frac{1}{\mathcal N_0}$ for large $\mathcal N_0$. Thus,
+      $$ \left|f_{\mathcal N_0}\left(\frac{1}{\mathcal N_0}\right) - f\left(\frac{1}{\mathcal N_0}\right)\right| = |1 - 0| = 1 \geq \epsilon_0 = \frac{1}{2}. $$
+      Hence, $\{ f_n \}$ does not converge uniformly on $[0, 1]$. This proves that for any $\{ n_k \} \subseteq \NN$, $\{ f_{n_k} \}$ does not converge uniformly on $[0, 1]$.
+    \end{proof}
+  \end{enumerate}
+\end{enumerate}
+
+\subsection{Equicontinuous Families of Functions}
+
+\begin{defn}
+  \normalfont A family $\mathcal F$ of complex functions defined on a set $E$, in a metric space $X$, is said to be {\bf equicontinuous} on $E$ if for every $\epsilon > 0$, there exists $\delta > 0$ such that $|f(x) - f(y)| < \epsilon$ whenever $x \in E$, $y \in E$ and $f \in \mathcal F$.
+\end{defn}
+
+\begin{remark}
+  \normalfont Every member of an equicontinuous family is uniformly continuous.
+\end{remark}
+
+\subsection{Diagonal Principle}
+
+\begin{thm}[Diagonal principle]
+  \normalfont If $\{ f_n \}$ is a pointwise bounded sequence of complex functions on a countable set $E$, then $\{ f_n \}$ has a subsequence $\{ f_{n_k} \}$ such that $\{ f_{n_k}(x) \}$ converges for every $x \in E$.
+\end{thm}
+
+\begin{proof}[Proof sketch]
+  \renewcommand{\qedsymbol}{}
+  Let $\{ x_i \}_{i = 1, 2, 3, \ldots}$ be the points of $E$.
+
+  {\bf Step 1.} Since $\{ f_n(x_1) \}$ is bounded, there exists a subsequence $\{ f_{1, k_i} \}$ such that $\{ f_{1, k_i}(x_1) \}$ converges as $k \to \infty$.
+
+  {\bf Step 2.} Since $\{ f_{1, k_i}(x_2) \}$ is bounded, there exists a subsequence $\{ f_{2, k_{i_j}} \}$ such that $\{ f_{2, k_{i_j}}(x_2) \}$ converges as $k \to \infty$.
+
+  Repeat this process.
+
+  $$
+  \begin{array}{lllll}
+    \textbf{Step 1:} & \text{\color{blue} $f_{1, k_1}$} & f_{1, k_2} & f_{1, k_3} & \ldots \\
+    \textbf{Step 2:} & f_{2, k_{i_1}} & \text{\color{blue} $f_{2, k_{i_2}}$} & f_{2, k_{i_3}} & \ldots \\
+    \textbf{Step 3:} & f_{3, k_{i_{j_1}}} & f_{3, k_{i_{j_2}}} & \text{\color{blue} $f_{3, k_{i_{j_3}}}$} & \ldots \\
+    \vdots & & & &
+  \end{array}
+  $$
+\end{proof}
+
+\end{document}
