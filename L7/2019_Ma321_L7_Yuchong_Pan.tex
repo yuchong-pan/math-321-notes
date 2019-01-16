@@ -1,0 +1,121 @@
+
+\documentclass[letterpaper, reqno,11pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{color,latexsym,amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{centernot}
+\usepackage{subcaption}
+\usepackage{extarrows}
+\usetikzlibrary{hobby}
+\usetikzlibrary{shapes.multipart}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.7}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\NN}{\mathbb{N}}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\Binomial}{Binomial}
+\pagestyle{fancy}
+\lhead{Math 321 Lecture 7}
+\rhead{Yuchong Pan}
+\begin{document}
+\pagenumbering{arabic}
+\title{Math 321 Lecture 7}
+\author{Yuchong Pan}
+\date{January 16, 2019}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem*{remark}{Remark}
+\newtheorem{claim}{Claim}
+\newtheorem{cor}{Corollary}
+\newtheorem{lemma}{Lemma}
+\maketitle
+%
+
+\section{The Space $C(X)$ (Cont'd)}
+
+Let $(X, d)$ be any metric space. Then $C(X)$ is the space of real-valued or complex-valued continuous functions on $X$. $C(X)$ is always a vector space on $\RR$ or $\CC$. If $X$ is {\bf compact}, then $C(X)$ is also a metric space, with respect to the uniform norm: $\lVert f - g \rVert_\infty = \sup_{x \in X} |f(x) - g(x)|$.
+
+~
+
+\noindent {\bf Questions:}
+\begin{enumerate}
+\item Suppose $X$ is compact, so that $C(X)$ is a metric space. What are the compact subsets of $C(X)$?
+\item {\bf Know:}
+  \begin{align*}
+    \text{uniform convergence} &\Rightarrow \text{pointwise convergence} \\
+    \text{pointwise convergence} &\centernot\Rightarrow \text{uniform convergence}
+  \end{align*}
+  pointwise convergence $+$ \fbox{equicontinuity} $\Rightarrow$ uniform convergence.
+\end{enumerate}
+
+\subsection{Arzela-Ascoli Theorem}
+
+\begin{thm}[Arzela-Ascoli] \label{thm:1}
+  \normalfont Let $(X, d)$ be a {\bf compact} metric space. Let $\mathcal F \subseteq C(X)$. Then $\mathcal F$ is compact if and only if $\mathcal F$ is closed, uniform bounded ($\exists M > 0 \text{ s.t. } \lVert F \rVert < M ~ \forall F \in \mathcal F$) and equicontinuous.
+\end{thm}
+
+Recall that $\mathcal G \subseteq C(X)$ where $X$ is compact is {\bf equicontinuous} if for all $\epsilon > 0$, there exists $\delta = \delta(\epsilon)$ such that for all $x, y \in X$ with $d(x, y) < \delta$, one has $|f(x) - f(y)| < \epsilon$ for all $f \in \mathcal G$.
+
+~
+
+\noindent {\bf Examples:}
+\begin{enumerate}
+\item $\mathcal G = \{ \text{ all constant functions } \}$ is equicontinuous but not uniformly bounded; AA $\Rightarrow$ $\mathcal G$ is not compact.
+\item $\mathcal G = \left\{ f_n(x) = x^n ; x \in [0, 1] \right\}$ is uniformly bounded by $1$, but not equicontinuous (Exercise).
+
+  Check that $\delta_n$ has to go to zero as $n \to \infty$ (near 1).
+\item $\mathcal G = \{ \text{ all constant functions $f(x) = k, k \in [0, 1]$} \}$ is equicontinuous and uniformly bounded.
+\item Any finite collection of continuous functions on a compact metric space is both equicontinuous and uniformly bounded.
+\item $\mathcal G = \left\{ x^n ; x \in \left[0, \frac{1}{2}\right] \right\} \subseteq C\left[0, \frac{1}{2}\right]$ and $\mathcal G = \left\{ \frac{x}{n} ; x \in [0, 1] \right\}$ are equicontinuous and uniformly bounded.
+\item The space of polynomials on $[0, 1]$ is neither equicontinuous nor uniformly bounded.
+\end{enumerate}
+
+\noindent {\bf Exercise:} Show that if $f_n, f \in C(X)$ where $X$ is compact, $f_n \to f$ uniformly on $X$, then $\mathcal F = \{ f_n : n \geq 1 \} \cup \{ f \}$ is equicontinuous and uniformly bounded.
+
+\begin{proof}[Proof of Theorem \ref{thm:1}]
+  \renewcommand{\qedsymbol}{}
+  \noindent {\bf Step 1:} Assume $\mathcal F$ is compact. Show that $\mathcal F$ is closed, uniformly bounded and equicontinuous.
+  \begin{itemize}
+  \item $\mathcal F$ is closed because compactness implies closedness in any metric space.
+  \item $\mathcal F$ is uniformly bounded: $\mathcal F$ compact $\Rightarrow$ $\mathcal F$ $\underbrace{\text{totally bounded}}_\text{i.e., $\forall \epsilon > 0, \exists f_1, f_2, \ldots, f_M \in C(X) \text{ s.t. } \mathcal F \subseteq \bigcup_{j = 1}^M B(f_j ; \epsilon)$}$.
+    
+    Choose $\epsilon = 1$. Then
+    $$ \mathcal F \subseteq \bigcup_{j = 1}^M \underbrace{\{ f \in C(X) : \lVert f - f_j \rVert_\infty < 1 \}}_{= B(f_j; 1)}. $$
+
+    Thus, for any $f \in \mathcal F$, there exists $f_j$ such that $\lVert f - f_j \rVert_\infty < 1$; i.e.,
+    $$ |f(x)| \leq |f(x) - f_j(x)| + |f_j(x)| \leq \lVert f - f_j \rVert_\infty + \lVert f_j \rVert < 1 + N, $$
+    where $N = \max \{ \lVert f_j \rVert : 1 \leq j \leq M \} < \infty$.
+  \item $\mathcal F$ is equicontinuous: Fix any $\epsilon > 0$.
+
+    Since $\mathcal F$ is totally bounded, identify $f_1, \ldots, f_M \in C(X)$ such that
+    \begin{equation} \label{eq:star} \tag{*}
+      \mathcal F \subseteq \bigcup_{j = 1}^M B\left(f_j ; \frac{\epsilon}{3}\right).
+    \end{equation}
+    For every $1 \leq j \leq M$, there exists $\delta_j = \delta_j(\epsilon) > 0$ such that
+    \begin{equation} \label{eq:star-star} \tag{**}
+      d(x, y) < \delta_j \xRightarrow{\text{$f$ is continuous}} |f_j(x) - f_j(y)|< \frac{\epsilon}{3} \quad \forall x, y \in X.
+    \end{equation}
+    Set $\delta = \min(\delta_1, \delta_2, \ldots, \delta_M) > 0$. We need to show that this $\delta$ works for all $f \in \mathcal F$:
+    $$ |f(x) - f(y)| \leq |f(x) - f_j(x)| + |f_j(x) - f_j(y)| + |f_j(y) - f(y)|, $$
+    where $1 \leq j \leq M$ is chosen so that $\lVert f - f_j \rVert < \frac{\epsilon}{3}$ (by \eqref{eq:star}). Thus,
+    \begin{align*}
+      |f(x) - f(y)| &< 2\lVert f - f_j \rVert + \frac{\epsilon}{3} \qquad \text{by \eqref{eq:star-star}} \\
+      &< 2 \cdot \frac{\epsilon}{3} + \frac{\epsilon}{3} = \epsilon.
+    \end{align*}
+    whenever $d(x, y) < \delta$.
+  \end{itemize}
+
+  ~
+
+  (Proof unfinished.)
+\end{proof}
+
+\end{document}
