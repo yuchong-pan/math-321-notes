@@ -1,0 +1,108 @@
+
+\documentclass[letterpaper, reqno,11pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{color,latexsym,amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{centernot}
+\usepackage{subcaption}
+\usepackage{extarrows}
+\usetikzlibrary{hobby}
+\usetikzlibrary{shapes.multipart}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.7}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\NN}{\mathbb{N}}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\Binomial}{Binomial}
+\pagestyle{fancy}
+\lhead{Math 321 Lecture 9}
+\rhead{Yuchong Pan}
+\begin{document}
+\pagenumbering{arabic}
+\title{Math 321 Lecture 9}
+\author{Yuchong Pan}
+\date{January 21, 2019}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem*{remark}{Remark}
+\newtheorem{claim}{Claim}
+\newtheorem{cor}{Corollary}
+\newtheorem{lemma}{Lemma}
+\maketitle
+%
+
+\section{Weierstrass Theorem (Take 2)}
+
+\begin{thm}[Classical Weierstrass]
+  \normalfont $\underbrace{\mathcal P_{\RR \text{ or } \CC}}_{\substack{\text{space of polynomials on $[a, b]$} \\ \text{with coefficients in $\RR$ or $\CC$}}} \overset{\text{\small dense}}{\subseteq} \underbrace{C([a, b]; \RR \text{ or } \CC)}_{\substack{\text{class of $\RR$-valued or $\CC$-valued} \\ \text{functions on $[a, b]$}}}$.
+\end{thm}
+
+\noindent {\bf Question:} Given a compact metric space $X$, can we determine whether a subset $S \subseteq C(X; \RR)$ is dense in $C(X; \RR)$?
+
+\begin{remark}
+  \normalfont Polynomials are not always well-defined on a general metric space $X$.
+\end{remark}
+
+\noindent {\bf Exercise:} What is an example of a compact metric space $X$ (not $[a, b]$) on which polynomials can be defined?
+\begin{enumerate}
+\item $X = \ZZ \pmod p = \{ 0, 1, \ldots, p - 1 \}$ is finite, hence compact.
+\item $X = [a, b] \cap \QQ^c$ is not compact.
+\item $K \subseteq \RR^n$ that is compact (i.e., closed and bounded); e.g., $K = [0, 1]^n \text{ or } B(0; 1) \text{ or a sphere } \mathbb S^{n - 1}$.
+
+  {\bf Example:} \fbox{$n = 2$, $P(x, y) = xy$}.
+
+  A general polynomial in $n$ variables of degree $\leq R$ is of the form
+  $$ P(\underbrace{x_1, x_2, \ldots, x_n}_{\mathbf x}) = \sum_{\substack{\mathbf \alpha = (\alpha_1, \ldots, \alpha_n) \in \ZZ_{\geq 0}^n \\ |\mathbf \alpha| = \alpha_1 + \ldots + \alpha_n \leq R}} \underbrace{c_{\mathbf \alpha}}_{\in \RR} x^{\mathbf \alpha}, $$
+  where
+  $$ \mathbf x^{\mathbf \alpha} \overset{\text{\small def}}{=} x_1^{\alpha_1} x_2^{\alpha_2} \ldots x_n^{\alpha_n}. $$
+\end{enumerate}
+
+\begin{defn}
+  \normalfont Let $A$ be a {\bf vector space} over $\RR$. Say that $A$ is an {\bf algebra} if there exists an operation $\times : A \times A \to A$, denoted by $(f, g) \mapsto fg$, obeying
+  \begin{enumerate}
+  \item $f(gh) = (fg)h$;
+  \item $f(g + h) = fg + fh$;
+  \item $(g + h)f = gf + hf$;
+  \item $\alpha(fg) = (\alpha f)g = f(\alpha g)$ for all $\alpha \in \RR$.
+  \end{enumerate}
+
+  $A$ is called {\bf commutative} if $fg = gf$.
+
+  Say that a commutative algebra $A$ has an {\bf identity element} $e$ if there exists $e \in A$ such that $fe = ef = f$ for all $f \in A$.
+
+  If $A$ is a normed vector space and an albegra, we call $A$ a {\bf normed algebra} if $\lVert fg \rVert \leq \lVert f \rVert \cdot \lVert g \rVert$ (called a {\bf Banach algebra} if $A$ is complete).
+\end{defn}
+
+\noindent {\bf Examples:}
+\begin{enumerate}
+\item $\RR$ is a Banach algebra.
+\item $X$ is compact; $\mathcal B(X; \RR)$, the space of bounded real-valued functions on $X$, is also a Banach algebra.
+\item $A = C(X; \RR)$, where $X$ is compact, is a commutative Banach algebra with $e$ equal to the constant function $1$.
+\item For compact $K \subseteq \RR$, $\mathcal P = \{ \text{polynomials on $K$} \}$ is a commutative algebra, but not Banach. Note that $\overline{\mathcal P} = C(X; \RR)$.
+\end{enumerate}
+
+\noindent {\bf Question revised:} Let $S \overset{\text{\small sub-algebra}}{\subseteq} \underbrace{C(X; \RR)}_\text{Banach algebra}$. When is $S$ dense in $C(X; \RR)$?
+
+\begin{thm}[Stone-Weierstrass theorem]
+  \normalfont An algebra $S \subseteq C(X; \RR)$ is dense in $C(X; \RR)$ if $S$ {\bf separates points} and {\bf vanishes at no point}.
+\end{thm}
+
+\begin{defn}
+  \normalfont
+  Say a set $\mathcal A \subseteq C(X; \RR)$ {\bf separates points} if for any two points $x, y \in X, x \neq y$, there exists $f \in \mathcal A$ such that $f(x) \neq f(y)$.
+\end{defn}
+
+\begin{defn}
+  \normalfont
+  Say $\mathcal A \subseteq C(X; \RR)$ {\bf vanishes at no point} if for all $x \in X$, there exists $f \in \mathcal A$ such that $f(x) \neq 0$.
+\end{defn}
+
+\end{document}
