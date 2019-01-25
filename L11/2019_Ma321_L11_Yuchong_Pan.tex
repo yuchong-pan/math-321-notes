@@ -1,0 +1,206 @@
+
+\documentclass[letterpaper, reqno,11pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{color,latexsym,amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{centernot}
+\usepackage{subcaption}
+\usepackage{extarrows}
+\usetikzlibrary{hobby}
+\usetikzlibrary{shapes.multipart}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.7}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\NN}{\mathbb{N}}
+\def\upint{\mathchoice%
+  {\mkern13mu\overline{\vphantom{\intop}\mkern7mu}\mkern-20mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  \int}
+\def\lowint{\mkern3mu\underline{\vphantom{\intop}\mkern7mu}\mkern-10mu\int}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\Binomial}{Binomial}
+\pagestyle{fancy}
+\lhead{Math 321 Lecture 11}
+\rhead{Yuchong Pan}
+\begin{document}
+\pagenumbering{arabic}
+\title{Math 321 Lecture 11}
+\author{Yuchong Pan}
+\date{January 25, 2019}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem*{remark}{Remark}
+\newtheorem{claim}{Claim}
+\newtheorem{cor}{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem{prop}{Proposition}
+\maketitle
+%
+
+\section{Proof of Stone-Weierstrass Theorem (Cont'd)}
+
+\begin{proof}[Proof (cont'd)]
+  Let $(X, d)$ be a compact metric space. Let $\mathcal A \subseteq C(X; \RR)$ be a subalgebra that separates points and vanishes at no point. We need to show that $\overline{\mathcal A} = C(X; \RR)$.
+
+  ~
+
+  \noindent {\bf Step 1:} Given $f \in C(X; \RR), \epsilon > 0, x \in X$, there exists $g_x \in \overline{\mathcal A}$ such that $g_x(x) = f(x)$ and $g_x(y) > f(y) - \epsilon$ for all $y \in X$.
+
+  ~
+
+  \noindent {\bf Step 2:} Goal is to find $g \in \overline{\mathcal A}$ such that $f(y) - \epsilon < g(y) < f(y) + \epsilon$ for all $y \in X$.
+
+  \noindent {\bf Proof:} Given $\epsilon > 0$, $(-\infty, \epsilon)$ is an open set in $\RR$. For any $x \in X$, consider $g_x - f$, which is in $C(X; \RR)$. Hence $V_x = (\underbrace{g_x}_\text{from step 1} - f)^{-1}(-\infty, \epsilon)$ is open in $X$. Then,
+  $$ V_x = \{ z \in X ; (g_x - f)(z) < \epsilon \} = \{ z \in X ; g_x(z) < f(z) + \epsilon \}. $$
+  
+  Note: $x \in V_x$ because $g_x(x) \underbrace{=}_\text{by step 1} f(x) < f(x) + \epsilon$.
+
+  Therefore, $\{ V_x ; x \in X \}$ forms an open cover of $X$. Since $X$ is compact, we can find $x_1, x_2, \ldots, x_J \in X$ such that $X = \bigcup_{j = 1}^J V_{x_j}$. This means that for every $x \in X$, there exists $1 \leq j \leq J$ such that $x \in V_{x_j}$; i.e., $g_{x_j}(x) - f(x) < \epsilon$. This implies that
+  \begin{equation} \label{eq:*} \tag{*}
+    g_{x_j}(x) < f(x) + \epsilon.
+  \end{equation}
+
+  Set $g = \min(g_{x_1}, g_{x_2}, \ldots, g_{x_J}) \in \overline{\mathcal A}$ by Proposition. Then \eqref{eq:*} implies that $g(x) \leq g_{x_j}(x) < f(x) + \epsilon$ for all $x \in X$.
+
+  On the other hand, {\bf for every} $1 \leq j \leq J$, $g_{x_j}(x) > f(x) - \epsilon$ for all $x \in X$, by step 1. This implies that $g(x) > f(x) - \epsilon$ because for every $x$, $g(x) = g_{x_j}(x)$ for some $x_j$ depending on $x$.
+
+  ~
+
+  \noindent\fbox{\begin{minipage}{\textwidth}
+      {\bf To do:}
+      \begin{enumerate}
+      \item $g \in \overline{\mathcal A}$; not $\mathcal A$, but this suffices.
+      \item Lemma and Proposition remain to be proved.
+      \end{enumerate}
+  \end{minipage}}
+
+  ~
+
+  Steps 1 and 2 show that for every $\epsilon > 0$, there exists $g \in \overline{\mathcal A}$ such that $\lVert f - g \rVert_\infty = \sup_{x \in X} |f(x) - g(x)| < \epsilon$. Thus,
+  $$ \text{$\overline{\mathcal A}$ is dense in $C(X; \RR)$} \Leftrightarrow \underbrace{\overline{\overline{\mathcal A}}}_{= \overline{\mathcal A}} = C(X; \RR). $$
+\end{proof}
+
+\section{Riemann-Stieltjes Integral}
+
+Recall classical Riemann integration: Let $f : [a, b] \xrightarrow{\text{bounded}} \RR$.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+      declare function={f(\x)=5*(\x-0.1)*(\x-0.45)*(\x-1.2)+0.75;},
+    ]
+    \begin{axis}[
+        xmin=0,
+        xmax=1.2,
+        ymin=0,
+        ymax=1,
+        xtick={0, 0.2, 0.35, 0.5, 0.7, 0.8, 1},
+        xticklabels={$a = x_0$, $x_1$, $x_2$, $x_{i - 1}$, $x_i$, $x_4$, $b = x_n$},
+        ytick={0.68, 0.375},
+        yticklabels={$M_i$, $m_i$},
+        axis x line=bottom,
+        axis y line=left,
+      ]
+      \addplot[thick, blue, samples at={0,0.05,...,1}, smooth](x,{f(x)}) node [above right] {$f$};
+      \draw[dashed] (axis cs:0.5,0) -- (axis cs:0.5,{f(0.5)});
+      \draw[dashed] (axis cs:0.7,0) -- (axis cs:0.7,{f(0.7)});
+      \draw[dashed] (axis cs:0,{f(0.5)}) -- (axis cs:0.5,{f(0.5)});
+      \draw[dashed] (axis cs:0,{f(0.7)}) -- (axis cs:0.7,{f(0.7)});
+    \end{axis}
+  \end{tikzpicture}
+\end{figure}
+
+Let $P = \{ a = x_0 < x_1 < \ldots < x_n = b \}$ denote a (finite) partition of $[a, b]$. Let
+\begin{align*}
+  \Delta x_i &= \text{length of the $i^\text{th}$ subinterval} = x_i - x_{i - 1}, \\
+  m_i &= \inf\{ f(x) ; x_{i - 1} \leq x \leq x_i \}, \\
+  M_i &= \sup\{ f(x) ; x_{i - 1} \leq x \leq x_i \}.
+\end{align*}
+Both $m_i$ and $M_i$ are finite because $f$ is bounded.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+      declare function={f(\x)=200*(\x-0.2)*(\x-0.4)*(\x-0.6)*(\x-0.9)*(\x-1)+0.3;},
+    ]
+    \begin{axis}[
+        xmin=0,
+        xmax=1.2,
+        ymin=0,
+        ymax=0.7,
+        xtick={0.22, 0.8},
+        xticklabels={$x_{i - 1}$, $x_i$},
+        ytick={0.576, 0.180},
+        yticklabels={$M_i$, $m_i$},
+        axis x line=bottom,
+        axis y line=left,
+      ]
+      \addplot[thick, blue, samples at={0,0.05,...,1}, smooth](x,{f(x)}) node [above right] {$f$};
+      \draw[dashed] (axis cs:0.22,0) -- (axis cs:0.22,{f(0.22)});
+      \draw[dashed] (axis cs:0.8,0) -- (axis cs:0.8,{f(0.8)});
+      \draw[dashed] (axis cs:0,{f(0.272)}) -- (axis cs:0.272,{f(0.272)});
+      \draw[dashed] (axis cs:0,{f(0.495)}) -- (axis cs:0.495,{f(0.495)});
+    \end{axis}
+  \end{tikzpicture}
+\end{figure}
+
+\begin{defn}
+  \normalfont
+  \begin{align*}
+    L(f, P) &= \text{{\bf lower Riemann sum} of $f$ associated to the partition $P$} = \sum_{i = 1}^n m_i \Delta x_i, \\
+    U(f, P) &= \text{{\bf upper Riemann sum} of $f$ associated to the partition $P$} = \sum_{i = 1}^n M_i \Delta x_i.
+  \end{align*}
+\end{defn}
+
+Note that $L(f, P) \leq U(f, P)$.
+
+\begin{defn}
+  \normalfont Let $P, Q$ be two partitions of $[a, b]$. Say $Q$ is a {\bf refinement} of $P$ if $P \subseteq Q$.
+\end{defn}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \draw (0, 0) -- (10, 0);
+    \foreach \x in {0, 2, 3.5, 4.5, 6.5, 8.5, 10}
+    \draw (\x, 0.1) -- (\x, -0.1);
+    \draw[red] (5.5, 0.1) -- (5.5, -0.1);
+    \node[below, yshift=-0.25cm] at (0, 0) {$a = x_0$};
+    \node[below, yshift=-0.25cm] at (2, 0) {$x_1$};
+    \node[below, yshift=-0.25cm] at (3.5, 0) {$x_2$};
+    \node[below, yshift=-0.25cm] at (4.5, 0) {$x_{i - 1}$};
+    \node[above, yshift=0.25cm, red] at (5.5, 0) {$j$};
+    \node[below, yshift=-0.25cm] at (6.5, 0) {$x_i$};
+    \node[below, yshift=-0.25cm] at (8.5, 0) {$x_{n - 1}$};
+    \node[below, yshift=-0.25cm] at (10, 0) {$x_n = b$};
+  \end{tikzpicture}
+\end{figure}
+
+\noindent {\bf Exercise:} Show:
+\begin{enumerate}
+\item $\underbrace{L(f, P) \leq L(f, Q) \leq U(f, Q) \leq U(f, P)}_\text{if $Q$ is a refinement of $P$}$.
+\item If $P, Q$ are arbitrary partitions,
+  $$ \max(L(f, P), L(f, Q)) \leq L(f, P \cup Q) \leq U(f, P \cup Q) \leq \min(U(f, P), U(f, Q)). $$
+\end{enumerate}
+
+\begin{defn}
+  \normalfont
+  \begin{align*}
+    \text{\bf Lower Riemann integral } \lowint_a^b fdx &= \sup_{\substack{P \\ \text{partition of $[a, b]$}}} L(f, P), \\
+    \text{\bf Upper Riemann integral } \upint_a^b fdx &= \inf_{\substack{P \\ \text{partition of $[a, b]$}}} U(f, P).
+  \end{align*}
+
+  Say $f$ is {\bf Riemann integrable} if $\lowint_a^b fdx = \upint_a^b fdx = \int_a^b fdx$.
+\end{defn}
+
+\end{document}
