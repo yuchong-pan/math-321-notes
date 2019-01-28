@@ -1,0 +1,135 @@
+
+\documentclass[letterpaper, reqno,11pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{color,latexsym,amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{centernot}
+\usepackage{subcaption}
+\usepackage{extarrows}
+\usetikzlibrary{hobby}
+\usetikzlibrary{shapes.multipart}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.7}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\NN}{\mathbb{N}}
+\def\upint{\mathchoice%
+  {\mkern13mu\overline{\vphantom{\intop}\mkern7mu}\mkern-20mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  \int}
+\def\lowint{\mkern3mu\underline{\vphantom{\intop}\mkern7mu}\mkern-10mu\int}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\Binomial}{Binomial}
+\pagestyle{fancy}
+\lhead{Math 321 Lecture 12}
+\rhead{Yuchong Pan}
+\begin{document}
+\pagenumbering{arabic}
+\title{Math 321 Lecture 12}
+\author{Yuchong Pan}
+\date{January 28, 2019}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem*{remark}{Remark}
+\newtheorem{claim}{Claim}
+\newtheorem{cor}{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem{prop}{Proposition}
+\maketitle
+%
+
+\section{Proofs of Lemma and Proposition in Stone-Weierstrass}
+
+\begin{lemma}
+  \normalfont Let $\mathcal A$ be a subalgebra of real-valued functions on a set $X$. Suppose that $\mathcal A$ separates points and vanishes at no point.
+
+  \noindent {\bf Show:} Given any two points $x_0, y_0 \in X, x_0 \neq y_0$ and $a, b \in \RR$, there exists $f \in \mathcal A$ such that $f(x_0) = a, f(y_0) = b$.
+\end{lemma}
+
+\begin{proof}
+  \noindent {\bf Take 1:} Since $\mathcal A$ vanishes at no point, there exists $g \in \mathcal A$ such that $g(x_0) \neq 0$. Define $f_1(x) = \underbrace{\alpha}_{\in \RR} g(x)$. Then $f_1 \in \mathcal A$ because $\mathcal A$ is a vector space.
+
+  Choose $\alpha \in \RR$ so that $f_1(x_0) = a$; i.e., $\alpha g(x_0) = a \Rightarrow \alpha = \frac{a}{g(x_0)}$. The function $f_1 = \frac{a}{g_0(x)} g(x)$ lies in $\mathcal A$ and takes the value $a$ at $x$.
+
+  Since $\mathcal A$ separates points, there exists $h \in \mathcal A$ such that $h(x_0) \neq h(y_0)$. Define
+  $$ f_2(x) = \underbrace{\frac{h(x) - h(x_0)}{h(y_0) - h(x_0)}}_\text{need not be in $A$}. $$
+  Then $f_2(x_0) = 0, f_2(y_0) = b$.
+
+  ...
+
+  ~
+
+  \noindent {\bf Take 2:} Since $\mathcal A$ separates points, there exists $g \in \mathcal A$ such that $g(x_0) \neq g(y_0)$. Since $\mathcal A$ vanishes at no point, there exist $h, k \in \mathcal A$ such that $h(x_0) \neq 0, k(y_0) \neq 0$.
+
+  Define:
+  $$ u(x) = [g(x) - g(x_0)] k(x) = \underbrace{g(x)k(x)}_{\in \mathcal A} - \underbrace{g(x_0)k(x)}_{\in \mathcal A} \Rightarrow u \in A. $$
+  Then $u(x_0) = 0, u(y_0) = \underbrace{[g(y_0) - g(x_0)]}_{\neq 0} \underbrace{k(y_0)}_{\neq 0} \neq 0$.
+
+  Set
+  $$ v(x) \overset{\text{\small def}}{=} [g(x) - g(y_0)] h(x) \in \mathcal A. $$
+  Similarly, $v(x_0) \neq 0, v(y_0) = 0$.
+
+  Define
+  $$ f(x) = \underbrace{\frac{b}{u(y_0)}}_{\in \RR} u(x) + \underbrace{\frac{a}{v(x_0)}}_{\in \RR} v(x). $$
+  Note that $f \in \mathcal A$. Then $f(x_0) = \frac{a}{v(x_0)} \cdot v(x_0) = a$ and similarly $f(y_0) = b$.
+\end{proof}
+
+\begin{prop}
+  \normalfont Let $X$ be a metric space. Let $\mathcal A \subseteq \mathcal B(X; \RR)$ be a subalgebra.
+
+  \noindent {\bf Show:} $\overline{\mathcal A}$ is a sub-lattice; i.e., if $f \in \overline{\mathcal A}$, then $|f| \in \overline{\mathcal A}$.
+\end{prop}
+
+\begin{proof}
+  Given $\epsilon > 0$, we need to find $g \in \overline{\mathcal A}$ such that
+  $$ \lVert |f| - g \rVert_\infty = \sup_{x \in X} ||f(x)| - g(x)| < \epsilon. $$
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        declare function={f(\x)=abs(\x);},
+      ]
+      \begin{axis}[
+          xmin=-1.2,
+          xmax=1.2,
+          ymin=-1,
+          ymax=1,
+          xtick={-1, 1},
+          xticklabels={$-M$, $M$},
+          ymajorticks=false,
+          axis x line=center,
+          axis y line=center,
+          xlabel={$t$},
+          ylabel={$|t|$},
+        ]
+        \addplot[thick, blue, samples at={-1, -0.95, ..., -0.05, 0, 0.05, ..., 0.95, 1}](x,{f(x)}) node [above right] {$f$};
+        \draw[dashed] (axis cs:1,0) -- (axis cs:1,{f(1)});
+        \draw[dashed] (axis cs:-1,0) -- (axis cs:-1,{f(-1)});
+        \draw[dashed, red] (axis cs:-1, 0.005) -- (axis cs:1, 0.005);
+      \end{axis}
+    \end{tikzpicture}
+  \end{figure}
+
+  Note that
+  $$ f \in \mathcal B(X; \RR) \Rightarrow \underbrace{\lVert f \rVert_\infty}_{=\sup_{x \in X} |f(x)|} = M < \infty. $$
+  By the classical Weierstrass, polynomials are dense in $C([-M, M]; \RR)$. Thus, there exists a polynomial $P$ such that
+  \begin{equation} \label{eq:*} \tag{*}
+    \sup_{t \in [-M, M]} ||t| - P(t)| < \epsilon.
+  \end{equation}
+  Note that as $x$ ranges over $X$, $f(x)$ takes values within $[-M, M]$. Replacing $f(x) = t$, we have
+  $$ \sup_{x \in X} \left||f(x)| - \underbrace{|P(f(x))|}_{g(x)}\right| \leq \sup_{t \in [-M, M]} ||t| - P(t)| \underbrace{<}_\text{\eqref{eq:*}} \epsilon. $$
+  If $P(t) = a_0 + a_1 t + a_2 t^2 + \ldots + a_n t^n$, then
+  $$ P(f(x)) = a_0 + a_1 \underbrace{f(x)}_{\in \overline{\mathcal A}} + \ldots + a_n \underbrace{(f(x))^n}_{\in \overline{\mathcal A}}. $$
+  Note that $P(0)$ can be {\bf chosen} to be $0$. Hence, $P \circ f \in \overline{\mathcal A}$ because $\overline{\mathcal A}$ is a subalgebra.
+\end{proof}
+
+\end{document}
