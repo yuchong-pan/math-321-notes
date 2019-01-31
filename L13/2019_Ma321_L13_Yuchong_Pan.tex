@@ -1,0 +1,134 @@
+
+\documentclass[letterpaper, reqno,11pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{color,latexsym,amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{centernot}
+\usepackage{subcaption}
+\usepackage{extarrows}
+\usetikzlibrary{hobby}
+\usetikzlibrary{shapes.multipart}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.7}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\NN}{\mathbb{N}}
+\def\upint{\mathchoice%
+  {\mkern13mu\overline{\vphantom{\intop}\mkern7mu}\mkern-20mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  \int}
+\def\lowint{\mkern3mu\underline{\vphantom{\intop}\mkern7mu}\mkern-10mu\int}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\Binomial}{Binomial}
+\pagestyle{fancy}
+\lhead{Math 321 Lecture 13}
+\rhead{Yuchong Pan}
+\begin{document}
+\pagenumbering{arabic}
+\title{Math 321 Lecture 13}
+\author{Yuchong Pan}
+\date{January 30, 2019}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem*{remark}{Remark}
+\newtheorem{claim}{Claim}
+\newtheorem{cor}{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem{prop}{Proposition}
+\maketitle
+%
+
+\section{Review (Cont'd)}
+
+\subsection{Problem 5}
+
+Evaluate
+$$ \lim_{n \to \infty} \int_0^\pi \underbrace{\frac{n + \sin nx}{3n - \sin^2 nx}}_{f_n} dx. $$
+
+\noindent {\bf Step 0:} $f_n$ has a pointwise limit for every $x \in \RR$.
+$$ \frac{n + \sin nx}{3n - \sin^2 nx} = \frac{n\left(1 + \frac{\sin nx}{n}\right)}{3n\left(1 - \frac{\sin^2 nx}{n}\right)} \xrightarrow{n \to \infty} \frac{1}{3} = f(x). $$
+
+\noindent {\bf Step 1:} Consider $C([0, \pi]; \RR)$, equipped with sup norm; note $f_n, f \in C([0, \pi]; \RR)$. $f_n$ is continuous because it denominator
+\begin{equation} \label{eq:*} \tag{*}
+  3n - \sin^2 nx \geq 3n - 1,
+\end{equation}
+hence never vanishes for $n \geq 1$.
+
+\emph{If} we can show $f_n \xrightarrow{n \to \infty} f$ uniformly on $[0, \pi]$, then by a theorem proved in class,
+$$ \lim_{n \to \infty} \int_0^\pi f_n(x) dx = \int_0^\pi \lim_{n \to \infty} f_n(x) dx = \int_0^\pi \frac{1}{3} dx = \frac{\pi}{3}. $$
+
+\noindent {\bf Step 2:}
+$$ |f_n(x) - f(x)| = \left|\frac{n + \sin nx}{3n - \sin^2 nx} - \frac{1}{3}\right| = \left|\frac{3\sin nx + \sin^2 nx}{3\left(3n - \sin^2 nx\right)}\right| \leq \underbrace{\frac{3|\sin nx| + \left|\sin^2 nx\right|}{3(3n - 1)}}_\text{by \eqref{eq:*}} \leq \underbrace{\frac{4}{3(3n - 1)}}_\text{independent of $x$}. $$
+Given $\epsilon > 0$, choose $N \geq 1$ so that $\frac{4}{3(3n - 1)} < \epsilon ~ \forall n \geq N$. Then the above implies $\lVert f_n - f\rVert_\infty < \epsilon ~ \forall n \geq N$. Hence $f_n \xrightarrow{n \to \infty} f$ uniformly on $[0, \pi]$.
+
+\subsection{Problem 6}
+
+For every $n \in \NN$, suppose $f_n : \RR \xrightarrow{\text{differentiable}} \RR$ satisfies
+\begin{equation} \label{eq:**} \tag{**}
+  f_n(0) = 2019, \qquad \left|f_n'(t)\right| \leq 321 + |t|^{201} \qquad \text{for all $t \in \RR$}.
+\end{equation}
+
+\noindent {\bf Show:} There exists $f : \RR \xrightarrow{\text{continuous}} \RR$ and a subsequence $n_1 < n_2 < \ldots < n_k < \ldots$ such that $f_{n_k} \xrightarrow{k \to \infty} f$ uniformly on every compact subset of $\RR$.
+
+~
+
+\noindent {\bf Hope:} Apply $\underbrace{\text{Arzela-Ascoli}}_\text{hypothesis: $\mathcal F \subseteq C(K; \CC)$, uniformly bounded and equicontinuous}$; need a compact metric space for this to work.
+
+~
+
+\noindent Let $\mathcal F = \{ f_n : \RR \to \RR, \text{obeying \eqref{eq:**}} \}$. Fix a compact set $K_R = [-R, R]$.
+
+~
+
+\noindent {\bf Question:} Is $\mathcal F$ uniformly bounded and equicontinuous on $K_R$?
+
+We have
+$$ f_n(t) - f_n(0) = \int_0^t f_n(s) ds. $$
+This implies that
+$$ |f_n(t)| \leq |f_n(0)| + \int_0^t \left|f_n'(s)\right| ds \leq 2019 + \int_0^t C_R ds \leq 2019 + C_R t. $$
+Hence, $\mathcal F \subseteq C(K_R; \RR)$ is uniformly bounded.
+
+We have
+$$ |f_n(x) - f_n(y)|= \left|\int_x^y f'(t) dt\right| \leq \int_x^y \underbrace{\left|f_n'(t)\right|}_{\leq C_R} \leq \underbrace{C_R |x - y|}_\text{independent of $n$} < \epsilon, $$
+provided $|x - y| < \delta = \frac{\epsilon}{C_R}$. Hence, $\mathcal F$ is equicontinuous on $C(K_R; \RR)$.
+
+AA implies that any sequence of functions in $\mathcal F$ must have a \emph{uniformly convergent subsequence on $K_R$}. Note that this subsequence comes with $R$ and may not have any relation with the subsequence for $K_{R'}, R' < R$.
+
+~
+
+\noindent {\bf Step 2:} Start with $R = 1$. Use Step 1 to get a subsequence $\underbrace{S_1}_{= \{ n_1 < n_2 < n_3 < \ldots \}} \subseteq \NN$ such that $\{ f_n : n \in S_1 \}$ converges uniformly on $K_1$.
+
+Next, set $R = 2$. Look at
+$$ \mathcal F_1 = \{ f_n : n \in S_1 \}. $$
+Note $\mathcal F_1$ is uniformly bounded and equicontinuous on $K_2$. By AA, there exists a subsequence $S_2 \subseteq S_1$ such that $\{ f_n : n \in S_2 \}$ converges uniformly on $K_2$.
+
+Iterate. At Step $j$, get a subsequence
+$$ S_j = \{ n_{j_1} < n_{j_2} < \ldots \} \subseteq S_{j - 1} \subseteq \ldots \subseteq S_1 $$
+such that $\{ f_n : n \in S_j \}$ converges uniformly on $K_j$.
+
+Consider the diagonal sequence $\{ f_{n_{kk}} : k \geq 1 \}$.
+
+\begin{figure}[H]
+  \centering
+  \begin{tabular} {ccccc}
+    $S_1$: & {\color{red} $n_{11}$} & $n_{12}$ & $n_{13}$ & $\ldots$ \\
+    $S_2$: & $n_{21}$ & {\color{red} $n_{22}$} & $n_{23}$ & $\ldots$ \\
+    \rotatebox[origin=c]{90}{$\subseteq$} & & & & \\
+    $\underbrace{S_k}_{k = R}$: & $n_{k1}$ & $n_{k2}$ & $\ldots$ & {\color{red} $n_{kk}$}
+  \end{tabular}
+\end{figure}
+
+\noindent {\bf Claim:} There exists $f \in C(\RR)$ such that $f_{n_{kk}} \xrightarrow{k \to \infty} f$ on every compact $K \subseteq \RR$.
+
+Start with any $K \overset{\text{\small compact}}{\subseteq} \RR$. Then there exists $R \geq 1$ such that $K \subseteq K_R = [-R, R]$. Since $n_{kk} \in S_R$ for all sufficiently large $k$, we know $f_{n_{kk}}$ converges uniformly on $K_R$ and hence $K$.
+
+\end{document}
