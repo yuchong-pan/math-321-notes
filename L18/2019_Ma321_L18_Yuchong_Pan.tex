@@ -1,0 +1,163 @@
+
+\documentclass[letterpaper, reqno,11pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{color,latexsym,amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{centernot}
+\usepackage{subcaption}
+\usepackage{extarrows}
+\usetikzlibrary{hobby}
+\usetikzlibrary{shapes.multipart}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.7}
+\usetikzlibrary{arrows.meta}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\NN}{\mathbb{N}}
+\def\upint{\mathchoice%
+  {\mkern13mu\overline{\vphantom{\intop}\mkern7mu}\mkern-20mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  \int}
+\def\lowint{\mkern3mu\underline{\vphantom{\intop}\mkern7mu}\mkern-10mu\int}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\Binomial}{Binomial}
+\pagestyle{fancy}
+\lhead{Math 321 Lecture 18}
+\rhead{Yuchong Pan}
+\begin{document}
+\pagenumbering{arabic}
+\title{Math 321 Lecture 18}
+\author{Yuchong Pan}
+\date{February 13, 2019}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem*{remark}{Remark}
+\newtheorem{claim}{Claim}
+\newtheorem{cor}{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem{prop}{Proposition}
+\maketitle
+%
+
+\section{Functions of Bounded Variation}
+
+\subsection{Jordan's Theorem}
+
+\begin{defn}
+  \normalfont $\alpha : [a, b] \to \RR$ is in $BV[a, b]$ if $V_a^b \alpha = \sup_\text{$P$ partition} V_a^b (\alpha, P) = \sup_P \sum_{i = 1}^n |\alpha(x_i) - \alpha(x_{i - 1})| < \infty$.
+\end{defn}
+
+\begin{thm}[Jordan's theorem]
+  \normalfont $\alpha \in BV[a, b]$ if and only if $\alpha$ can be written as $\alpha = \beta - \gamma$, with $\beta, \gamma$ nondecreasing.
+\end{thm}
+
+\begin{proof}
+  ``$\Leftarrow$'': Assume $\alpha = \beta - \gamma$ with $\beta, \gamma \xrightarrow{\text{nondecreasing}} \RR$. Let $P = \{ a = x_0 < x_1 < \ldots < x_n = b \}$. Then,
+  \begin{align*}
+    V_a^b (\alpha, P) &= \sum_{i = 1}^n |\alpha(x_i) - \alpha(x_{i - 1})| \\
+    &= \sum_{i = 1}^n |[\beta(x_i) - \beta(x_{i - 1})] - [\gamma(x_i) - \gamma(x_{i - 1})]| \\
+    &\underbrace{\leq \sum_{i = 1}^n |\beta(x_i) - \beta(x_{i - 1})| + \sum_{i = 1}^n |\gamma(x_i) - \gamma(x_{i - 1})|}_\text{triangular inequality} \\
+    &= V_a^b (\beta, P) + V_a^b (\gamma, P) \leq V_a^b \beta + V_a^b \gamma \\
+    &= \underbrace{[\beta(b) - \beta(a)] + [\gamma(b) - \gamma(a)]}_\text{independent of $P$} < \infty.
+  \end{align*}
+  Hence, $V_a^b \alpha = \sup_P V_a^b (\alpha, P) \leq [\beta(b) - \beta(a)] + [\gamma(b) - \gamma(a)] < \infty$.
+
+  \medskip
+
+  \noindent {\bf Exercise:} If $f, g \in BV[a, b]$, then $V_a^b (f \pm g) leq V_a^b f + V_a^b g$.
+
+  \medskip
+
+  ``$\Rightarrow$'': Assume that $\alpha \in BV[a, b]$; need to find $\beta, \gamma$ nondecreasing such that $\underbrace{\alpha = \beta - \gamma}_{\Rightarrow ~ \gamma = \beta - \alpha}$. Introduce the variation function $v(x) = V_a^x \alpha = \text{total variation of $\alpha$ on $[a, x]$}$.
+
+  \medskip
+
+  \noindent {\bf Exercise:} $v(x)$ is well-defined because $V_a^b \alpha \geq V_a^c \alpha$ for any interval $[c, d] \subseteq [a, b]$.
+
+  \medskip
+
+  \noindent {\bf Question:} Is $v$ nondecreasing? Yes.
+
+  Let $x < y$. Need to verify if $\underbrace{v(x)}_{= V_a^x \alpha} \leq \underbrace{v_y(y)}_{= V_a^y \alpha}$.
+
+  True by Exercise above since $[a, x] \subseteq [a, y]$.
+
+  \medskip
+
+  \noindent {\bf Question:} Is $v(\cdot) - \alpha(\cdot)$ nondecreasing? Yes.
+
+  Let $x < y$; need to verify if
+  \begin{align*}
+    v(x) - \alpha(x) &\leq v(y) - \alpha(y), \\
+    \alpha(y) - \alpha(x) &\leq \underbrace{v(y) - v(x)}_{V_a^y \alpha - V_a^x \alpha = V_x^y \alpha = \sup_\text{$P$ partition of $[x, y]$} V_x^y (\alpha, P)}.
+  \end{align*}
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \draw (0, 0) -- (5, 0);
+      \draw (0, 0.1) -- (0, -0.1);
+      \draw (1.5, 0.1) -- (1.5, -0.1);
+      \draw (3, 0.1) -- (3, -0.1);
+      \node[below] at (0, 0) {$a$};
+      \node[above] at (1.5, 0) {$x$};
+      \node[above] at (3, 0) {$y$};
+      \draw (0, 0.5) to[bend left=50] (1.5, 0.5);
+      \draw (0, -0.5) to[bend right=50] (3, -0.5);
+      \draw[dashed, red, thick] (1.5, 0) -- (3, 0);
+    \end{tikzpicture}
+  \end{figure}
+
+  Note: $|\alpha(y) - \alpha(x)| = V_x^y \alpha(x, P_0)$, where $P_0 = \{ x, y \}$. Thus,
+  $$ \alpha(y) - \alpha(x) \leq |\alpha(y) - \alpha(x)| = V_x^y (\alpha, P_0) \leq V_x^y \alpha = v(y) - v(x). $$
+
+  \medskip
+
+  \noindent {\bf Exercise:} Check that for any $c \in (a, b)$ and any $f \in BV[a, b]$,
+  $$ V_a^c f + V_c^b f = V_a^b f. $$
+\end{proof}
+
+\begin{remark}
+  \normalfont Jordan's theorem suggests that $BV[a, b]$ could be a good source of Riemann-Stieltjes integrators, with respect to which continuous functions on $[a, b]$ can be integrated.
+  $$ \int fd\underbrace{\alpha}_{\in BV} = \int fd(\beta - \gamma) \xlongequal{\text{?}} \int fd\beta - \int fd\gamma. $$
+\end{remark}
+
+\subsection{Interchanging Integrands and Integrators}
+
+\noindent {\bf Recall:}
+$$ \int_a^b (\underbrace{udv}_{=u(x)v'(x)dx} + \underbrace{vdu}_{=v(x)u'(x)dx}) = u(b) v(b) - u(a) v(a). \qquad \longrightarrow \text{integration by parts} $$
+
+\begin{thm}[Integration by parts for Riemann-Stieltjes integrals]
+  \normalfont Let $f, \alpha \to \RR$ be arbitrary functions. Then,
+  $$ \underbrace{f \in \mathcal R_\alpha[a, b]}_{\substack{\exists I \text{ s.t. } \forall \epsilon > 0, \exists \text{a partition $P_0$} \text{ s.t. } |S_\alpha(f, P, T) - I| < \epsilon \\ \text{ for $P \supseteq P_0$ and any selection of points $T$ subordinate to $P$}}} \Leftrightarrow \alpha \in \mathcal R_f[a, b]. $$
+
+  In either case,
+  $$ \int_a^b fd\alpha + \int_a^b \alpha df = \alpha(b) f(b) - \alpha(a) f(a). $$
+\end{thm}
+
+\begin{cor}
+  \normalfont $C[a, b] \subseteq \mathcal R_\alpha[a, b]$ for all $\alpha \in BV[a, b]$.
+\end{cor}
+
+\begin{proof}
+  Use Jordan's theorem to write $\alpha = \beta - \gamma$ with $\beta, \gamma$ nondecreasing.
+
+  Note by a previous theorem, $C[a, b] \subseteq \mathcal R_\beta[a, b] \cap \mathcal R_\gamma[a, b]$. This implies that if $f \in C[a, b]$, then $\int_a^b fd\beta$ and $\int_a^b fd\gamma$ are well-defined.
+
+  By IBP, $\int_a^b \beta df$ and $\int_a^b \gamma df$ are well-defined too; i.e., $\beta, \gamma \in \mathcal R_f[a, b]$. But it is easy to see that $\mathcal R_f[a, b]$ is a vector space, with
+  $$ \int_a^b (\beta \pm \gamma) df = \int_a^b \beta df \pm \int_a^b \gamma df. $$
+  This implies $\beta \pm \gamma \in \mathcal R_f[a,b]$; in particular, $\alpha = \beta - \gamma \in  \mathcal R_f[a, b]$.
+
+  Use IBP again; get $f \in \mathcal R_\alpha[a, b]$.
+\end{proof}
+
+\end{document}
