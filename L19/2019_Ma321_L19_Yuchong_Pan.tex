@@ -1,0 +1,166 @@
+
+\documentclass[letterpaper, reqno,11pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{color,latexsym,amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{centernot}
+\usepackage{subcaption}
+\usepackage{extarrows}
+\usetikzlibrary{hobby}
+\usetikzlibrary{shapes.multipart}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.7}
+\usetikzlibrary{arrows.meta}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\NN}{\mathbb{N}}
+\def\upint{\mathchoice%
+  {\mkern13mu\overline{\vphantom{\intop}\mkern7mu}\mkern-20mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  \int}
+\def\lowint{\mkern3mu\underline{\vphantom{\intop}\mkern7mu}\mkern-10mu\int}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\Binomial}{Binomial}
+\pagestyle{fancy}
+\lhead{Math 321 Lecture 19}
+\rhead{Yuchong Pan}
+\begin{document}
+\pagenumbering{arabic}
+\title{Math 321 Lecture 19}
+\author{Yuchong Pan}
+\date{February 15, 2019}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem*{remark}{Remark}
+\newtheorem{claim}{Claim}
+\newtheorem{cor}{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem{prop}{Proposition}
+\maketitle
+%
+
+\section{Linear Functionals on Normed Vector Spaces}
+
+\subsection{Definition and Examples}
+
+Let $V$ be a vector space on $\RR$, equipped with a norm $\lVert \ \cdot \ \rVert_V$. $\lVert \ \cdot \ \rVert_V$ generates a metric on $V$ via $d(\mathbf v, \mathbf w) = \lVert \mathbf v - \mathbf w \rVert_V$. This allows to define \emph{continuous functions} on $X$.
+
+\medskip
+
+\noindent {\bf Recall:} A function $f : V \to \RR$ is continuous (by definition) if $f^{-1}(\text{open set in $\RR$})$ is open in $V$.
+
+\begin{defn}
+  \normalfont Say $T : V \to \RR$ is a {\bf continuous linear functional} on $V$ if
+  \begin{enumerate}
+  \item $T$ is linear: $T(\alpha \mathbf v + \beta \mathbf w) = \alpha T(\mathbf v) + \beta T(\mathbf w)$ for all $\mathbf v, \mathbf w \in V, \alpha, \beta \in \RR$;
+  \item $T$ is continuous.
+  \end{enumerate}
+\end{defn}
+
+\noindent {\bf Examples:}
+\begin{enumerate}
+\item $V = \RR^n$; what is a continuous linear functional on $V$?
+
+  $T : \RR^n \xrightarrow{\text{linear}} \RR \Leftrightarrow \exists \mathbf a \in \RR^n \text{ s.t. } T(\mathbf x) = \sum_{j = 1}^n a_j x_j ~ \forall \mathbf x = (x_1, \ldots, x_n)$. These are continuous.
+
+  \medskip
+
+  \noindent {\bf Exercise:} Check that if $V$ is finite-dimensional, then any linear functional on $V$ is continuous.
+\item Is this fact necessarily true if $V$ is infinite-dimensional?
+  \begin{enumerate}
+  \item
+    \begin{align*}
+      V &= \{ \text{all infinite sequences with all but finitely many entries $0$} \} \\
+      &= \{ \mathbf x = (x_1, x_2, x_3, \ldots) : \exists N \geq 1 \text{ s.t. } x_j = 0 ~ \forall j \geq N \}.
+    \end{align*}
+
+    $V$ is infinite-dimensional because $\left\{ \mathbf e_j = (0, 0, \ldots, \underbrace{j}_\text{$j^\text{th}$ entry}, 0, \ldots) : j \geq 1 \right\}$ is an infinite linearly independent set in $V$.
+
+    Define $T(\mathbf x) = \sum_{j = 1}^\infty x_j$. Recall that $\lVert \mathbf x \rVert_1 = \sum_{j = 1}^\infty |x_j|$. Note that $T$ is linear and $|T(\mathbf x)| \leq \sum_{j = 1}^\infty |x_j| = \lVert \mathbf x \rVert_1$.
+
+    \begin{claim}
+      \normalfont $T$ is continuous and linear with respect to $\lVert \ \cdot \ \rVert_1$.
+    \end{claim}
+
+    Define $\lVert \mathbf x \rVert^* = \sum_{j = 1}^\infty 2^{-j} |x_j|$. Note that $T(\mathbf e_j) = 1$ for every $j \geq 1$ and $\lVert \mathbf e_j \rVert^* = 2^{-j}$. This implies that
+    $$ \frac{|T(\mathbf e_j)|}{\lVert \mathbf e_j \rVert^*} = \frac{1}{2^{-j}} = 2^j \xrightarrow{j \to \infty} \infty. $$
+  \item $\mathcal P = \{ \text{all polynomials on $[0, 1]$} \}$, equipped with the sup norm.
+
+    $\mathcal P$ is infinite-dimensional because $\left\{ \underbrace{x_n}_{= P_n} : n \geq 0 \right\}$ form a linearly independent set.
+
+    Let $T : \mathcal P \to \RR$ be defined by $f \mapsto f'(1)$.
+
+    \begin{claim}
+      \normalfont $T$ is linear but discontinuous.
+    \end{claim}
+
+    Note that $T(P_n) = \left. nx^{n - 1} \right|_{x = 1} = n$ and that $\lVert P_n \rVert_\infty = 1$. This implies that
+    $$ \frac{|T(P_n)|}{\lVert P_n \rVert} \xrightarrow{n \to \infty} \infty. $$
+  \end{enumerate}
+\end{enumerate}
+
+\begin{thm}
+  \normalfont Let $V$ be a normed vector space. A linear map $T : V \to \RR$ is continuous if and only if $T$ obeys
+  \begin{equation} \label{eq:*} \tag{*}
+    \sup \left\{ \frac{|T(\mathbf x)|}{\lVert \mathbf x \rVert} : \mathbf x \in V \right\} = K < \infty \Leftrightarrow |T(\mathbf x)| \leq K \lVert \mathbf x \rVert.
+  \end{equation}
+\end{thm}
+
+\begin{proof}
+  ``$\Leftarrow$'': {\bf Exercise:} If $T$ obeys \eqref{eq:*}, show that $T$ is Lipschitz and hence continuous.
+
+  ``$\Rightarrow$'': Assume $T$ is linear and continuous on $V$, hence at $\mathbf 0$; i.e., given any $\epsilon > 0$ (choose $\epsilon = 1$), there exists $\delta > 0$ such that
+  $$ \lVert \mathbf x \rVert = \lVert \mathbf x - \mathbf 0 \rVert < \delta \Rightarrow \left|T(\mathbf x) - \underbrace{T(\mathbf 0)}_{= 0}\right| < \epsilon = 1. $$
+
+  \noindent {\bf Shown:}
+  \begin{equation} \label{eq:**} \tag{**}
+    \lVert \mathbf x \rVert < \delta \Rightarrow |T(\mathbf x)| < 1.
+  \end{equation}
+  Choose any $\mathbf y \in V, \mathbf y \neq \mathbf 0$. Set $\mathbf v = \frac{\delta}{2} \frac{\mathbf y}{\lVert \mathbf y \rVert}$. Then, $\lVert \mathbf v \rVert = 1 \cdot \frac{\delta}{2} = \frac{\delta}{2} < \delta$. Note that
+  \begin{align*}
+    \eqref{eq:**} &\Rightarrow |T(\mathbf v)| < 1 \\
+    &\Rightarrow \left|T\left(\frac{\delta}{2} \frac{\mathbf y}{\lVert \mathbf y \rVert}\right)\right| < 1 \\
+    &\Rightarrow \frac{\delta}{2} \frac{1}{\lVert \mathbf y \rVert} |T(\mathbf y)| < 1 \\
+    &\Rightarrow |T(\mathbf y)| < \underbrace{\frac{2}{\delta}}_{= K} \lVert \mathbf y \rVert.
+  \end{align*}
+  This is \eqref{eq:*} with $K = \frac{2}{\delta}$.
+\end{proof}
+
+\subsection{Riesz Representation Theorem}
+
+\begin{defn}
+  \normalfont Let $V$ be a normed vector space. Then $V^* = \left\{ T : V \xrightarrow[\text{linear}]{\text{continuous}} \RR \right\}$ is called the {\bf dual} of $V$.
+\end{defn}
+
+\noindent {\bf Question:} What is $C[a, b]^*$? i.e., what does a continuous linear functional on $C[a, b]$ look like?
+
+\begin{thm}[Riesz representation theorem]
+  \normalfont $C[a, b]^* \cong BV[a, b]$.
+
+  In other words, $L : C[a, b] \to \RR$ is a continuous linear functional if and only if there exists $\alpha \in BV[a, b]$ such that
+  $$ L(f) = \int_a^b fd\alpha ~ \forall f \in C[a, b]. $$
+\end{thm}
+
+\begin{remark}
+  \normalfont ~
+  
+  \begin{enumerate}
+  \item Is $\alpha$ unique?
+    
+    {\bf Answer:} No. If $\alpha$ works, $\alpha + \text{constant}$ will absolutely work.
+
+    In fact, there exists a choice of $\alpha \in BV[a, b]$ such that $\alpha$ is right continuous on $[a, b]$ and $\alpha(a) = 0$. Such a choice is unique.
+  \item $\alpha$ is, in the language of measure, the \emph{distribution function} of a random variable; i.e., if $X$ is a random variable, $\alpha(x) = \mathbb P(X \leq x)$.
+  \end{enumerate}
+\end{remark}
+
+\end{document}
