@@ -1,0 +1,147 @@
+
+\documentclass[letterpaper, reqno,11pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{color,latexsym,amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{centernot}
+\usepackage{subcaption}
+\usepackage{extarrows}
+\usetikzlibrary{hobby}
+\usetikzlibrary{shapes.multipart}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.7}
+\usetikzlibrary{arrows.meta}
+\usepackage{cancel}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\NN}{\mathbb{N}}
+\def\upint{\mathchoice%
+  {\mkern13mu\overline{\vphantom{\intop}\mkern7mu}\mkern-20mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  \int}
+\def\lowint{\mkern3mu\underline{\vphantom{\intop}\mkern7mu}\mkern-10mu\int}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\Binomial}{Binomial}
+\pagestyle{fancy}
+\lhead{Math 321 Lecture 20}
+\rhead{Yuchong Pan}
+\begin{document}
+\pagenumbering{arabic}
+\title{Math 321 Lecture 20}
+\author{Yuchong Pan}
+\date{February 25, 2019}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem*{remark}{Remark}
+\newtheorem{claim}{Claim}
+\newtheorem{cor}{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem{prop}{Proposition}
+\maketitle
+%
+
+\section{Riesz Representation Theorem}
+
+\begin{thm}[Riesz representation theorem]
+  \normalfont Given any continuous linear functional $L : C[a, b] \to \RR$, there exists $\alpha \in BV[a, b]$ with $\underbrace{\lVert L \rVert = V_a^b \alpha}_\text{(Recall: $\lVert L \rVert_{op} = \lVert L \rVert = \sup_{0 \neq f \in C[a, b]} \frac{|L(f)|}{\lVert f \rVert_\infty}$)}$ such that $L(f) = \int_a^b fd\alpha$ for all $f \in C[a, b]$.
+
+  We can choose $\alpha$ to be right continuous on $[a, b]$ with $\alpha(a) = 0$. In this case, $\alpha$ is unique.
+\end{thm}
+
+\begin{proof}
+  \noindent {\bf Step 1:} Find approximations for $\alpha$. Fix $n \geq 1, 0 \leq k \leq n$. Define
+  \begin{align*}
+    P_{n, k}(x) &= \binom{n}{k} x^k (1 - x)^{n - k} \\
+    &= \text{binomial probability for $k$ sucesses in $n$ tosses of a coin with success probability $x$}, \\
+    B_n(f)(x) &= \sum_{k = 0}^n f\left(\frac{k}{n}\right) P_{n, k}(x) \\
+    &= \text{expected value of $f$ with respect to the above binomial distribution}.
+  \end{align*}
+  Know from proof of classical Weierstrass:
+  \[ B_n(f) \xrightarrow{n \to \infty} L(f) \text{ uniformly}, \qquad \forall f \in C[0, 1]. \]
+  Since $L$ is \emph{continuous},
+  \[ L(B_n(f)) \xrightarrow{n \to \infty} L(f). \]
+  Note that
+  \[ L(B_n(f)) = L\left(\sum_{k = 0}^n f\left(\frac{k}{n}\right) P_{n, k}\right) \xlongequal{\text{since $L$ is linear}} \sum_{k = 0}^n \underbrace{f\left(\frac{k}{n}\right)}_\text{scalars} \underbrace{L(P_{n, k})}_\text{functions in $C[0, 1]$} = \int_0^1 fd\alpha_n, \]
+  where $\alpha_n$ is a step function (WLOG can be chosen to be right continuous with $\alpha(0) = 0$) with possible discontinuities at the points $x_k = \frac{k}{n}, 0 \leq k \leq n$ with a jump of $L(P_{n, k})$ at $x_k$.
+
+  \noindent $\rightarrow$ See HW 6 ($\sum f(x_i) \Delta \alpha_i = \int fd\alpha$).
+
+  \medskip
+
+  \noindent {\bf Question:} Is $\alpha_n \in BV[a, b]$?
+  
+  \noindent Yes, because each $a_n$ is a well-defined step function in $\mathcal B[a, b]$.
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+          xmin=-0.15,
+          xmax=1,
+          ymin=-0.2,
+          ymax=1,
+          xtick={0.15, 0.3, 0.45, 0.6, 0.75, 0.9},
+          xticklabels={$\frac{1}{n}$, $\frac{2}{n}$, $\frac{3}{n}$, $\ldots$, $1 - \frac{1}{n}$, $1$},
+          ymajorticks=false,
+          axis x line=center,
+          axis y line=center,
+          x=12cm,
+          y=4cm,
+        ]
+        \draw[thick, blue] (axis cs:0, 0.3) -- (axis cs:0.15, 0.3);
+        \draw[thick, blue] (axis cs:0.15, 0.6) -- (axis cs:0.3, 0.6);
+        \draw[thick, blue] (axis cs:0.3, 0.4) -- (axis cs:0.45, 0.4);
+        \draw[dashed] (axis cs:0.15, 0.3) -- (axis cs:0.15, 0.6);
+        \draw[dashed] (axis cs:0.3, 0.4) -- (axis cs:0.3, 0.6);
+        \draw[decoration={brace, raise=0.1cm}, decorate] (axis cs:0, 0) -- (axis cs:0, 0.3) node[midway, left, xshift=-0.1cm] {$L(P_{n, 0})$};
+        \draw[decoration={brace, raise=0.1cm}, decorate] (axis cs:0.15, 0.3) -- (axis cs:0.15, 0.6) node[midway, left, xshift=-0.1cm] {$L(P_{n, 1})$};
+        \draw[decoration={brace, raise=0.1cm}, decorate] (axis cs:0.3, 0.6) -- (axis cs:0.3, 0.4) node[midway, right, xshift=0.1cm] {$L(P_{n, 2})$};
+      \end{axis}
+    \end{tikzpicture}
+  \end{figure}
+
+  \noindent {\bf Step 2:} Use Helly's theorems to find $\alpha \in BV[a, b]$ from the sequence $\{ \alpha_n : n \geq 0 \}$. Recall Helly's second theorem:
+  \begin{thm}[Helly's second theorem]
+    Suppose $\{ a_n \} \subseteq BV[0, 1]$. Assume:
+    \begin{itemize}
+    \item $\alpha_n \xrightarrow{n \to \infty} \alpha$ pointwise on $[0, 1]$;
+    \item \fbox{$V_a^b \alpha_n \leq K$ for all $\forall n \geq 1$.} --- (*)
+    \end{itemize}
+    Then $\alpha \in BV[a, b]$ and $\int_0^1 fd\alpha_n \xrightarrow{n \to \infty} \int_0^1 fd\alpha$.
+  \end{thm}
+
+  \noindent {\bf Check (*):}
+  \begin{align*}
+    V_0^1 \alpha_n &= \text{sum of the magnitudes of the jumps of $\alpha_n$} \\
+    &= \sum_{k = 0}^n |L(P_{n, k})| && \text{If $L(P_{n, k}) \geq 0$, then} \\
+    & && \sum_{k = 0}^n L(P_{n, k}) = L\left(\sum_{k = 0}^n P_{n, k}\right) = L(1). \\
+    &= \sum_{k = 0}^n \epsilon_{n, k} L(P_{n, k}) && \text{ where $\epsilon_{n, k} = \left\{
+      \begin{array}{ll}
+        1, & \text{if $L(P_{n, k}) \geq 0$}, \\
+        -1, & \text{if $L(P_{n, k}) < 0$}.
+      \end{array}
+      \right.$} \\
+    &= L\left(\sum_{k = 0}^n \epsilon_{n, k} P_{n, k}\right) && \text{ since $L$ is linear} \\
+    &\leq \underbrace{\lVert L \rVert_{op}}_\text{independent of $n$} \left\lVert \sum_{k = 0}^n \epsilon_{n, k} P_{n, k} \right\rVert_\infty && \text{ since $L$ is continuous, linear and bounded} \\
+    &\leq \lVert L \rVert_{op} \underbrace{\left\lVert \sum_{k = 0}^n |\xcancel{\text{$\epsilon_{n, k}$}} \underbrace{P_{n, k}}_{\geq 0}| \right\rVert_\infty}_\text{triangular inequality} = \lVert L \rVert_{op} = K < \infty.
+  \end{align*}
+
+  Helly's first theorem says (*) $\Rightarrow$ $\exists n_k \nearrow \infty$ such that $\alpha_{n_k} \to \alpha$ pointwise. Recall:
+  \[ L(B_n(f)) \to L(f). \]
+  Therefore,
+  \[ L(B_{n_k}(f)) \xrightarrow{k \to \infty} L(f). \]
+  Note that $L(B_{n_k}(f)) = \int_0^1 fd\alpha_{n_k}$ and that $\alpha_{n_k} \to \alpha$. This implies that
+  \[ \int_0^1 fd\alpha_{n_k} \xrightarrow{\text{by Helly's two theorems}} \int_0^1 fd\alpha. \]
+  This proves that $L(f) = \int_0^1 fd\alpha$.
+\end{proof}
+
+\end{document}
