@@ -1,0 +1,142 @@
+
+\documentclass[letterpaper, reqno,11pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{color,latexsym,amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{centernot}
+\usepackage{subcaption}
+\usepackage{extarrows}
+\usetikzlibrary{hobby}
+\usetikzlibrary{shapes.multipart}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.7}
+\usetikzlibrary{arrows.meta}
+\usepackage{cancel}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\NN}{\mathbb{N}}
+\def\upint{\mathchoice%
+  {\mkern13mu\overline{\vphantom{\intop}\mkern7mu}\mkern-20mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  \int}
+\def\lowint{\mkern3mu\underline{\vphantom{\intop}\mkern7mu}\mkern-10mu\int}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\Binomial}{Binomial}
+\pagestyle{fancy}
+\lhead{Math 321 Lecture 21}
+\rhead{Yuchong Pan}
+\begin{document}
+\pagenumbering{arabic}
+\title{Math 321 Lecture 21}
+\author{Yuchong Pan}
+\date{February 27, 2019}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem*{remark}{Remark}
+\newtheorem{claim}{Claim}
+\newtheorem{cor}{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{fact}{Fact}
+\maketitle
+%
+
+\section{Fourier Series}
+
+Consider the interval $[-\pi, \pi]$.
+
+\begin{defn}
+  \normalfont A function $T : [-\pi, \pi] \to \CC$ is called a {\bf trignometric polynomial} if $T$ is of the form
+  \[ T = \alpha_0 + \sum_{k = 1}^n \left(\underbrace{\alpha_k}_\textbf{amplitude} \cos kx + \underbrace{\beta_k}_\textbf{amplitude} \sin kx\right), \]
+  where $\underbrace{\alpha_k}_{0 \leq k \leq n}, \underbrace{\beta_k}_{1 \leq k \leq n} \in \CC$.
+
+  Say $T$ has a {\bf frequency} $k \in \{ \pm 1, \ldots, \pm n \}$ if at least one of $\alpha_k$ or $\beta_k$ does not equal $0$.
+
+  Alternatively, $T$ can also be expressed as
+  \begin{equation} \label{eq:*} \tag{*}
+    T(x) = \sum_{k = -n}^n a_k e^{ikx}, a_k \in \CC,
+  \end{equation}
+  because $e^{i\theta} = \cos \theta + i\sin \theta$ so $\cos\theta = \frac{e^{i\theta} + e^{-i\theta}}{2}, \sin\theta = \frac{e^{i\theta} - e^{-i\theta}}{2}$.
+\end{defn}
+
+Recall Weierstrass's second theorem: Any $f \in \mathcal C^{2\pi} =$ the space of complex-valued, $2\pi$-periodic, continuous functions on $[-\pi, \pi]$ can be uniformly approximated by a sequence of trignometric polynomials.
+
+\medskip
+
+\noindent {\bf Question:} Given a trignometric polynomial $T$ with unspecified coefficients $\alpha_k, \beta_k$ (or $a_k$), is it possible to obtain its frequencies and corresponding amplitudes?
+\[ T(x) = \alpha_0 + \sum_{k = 1}^n (\alpha_k \cos kx + \beta_k \sin kx), \qquad \text{$n, \alpha_k, \beta_k$ unknown}. \]
+
+\begin{fact} \label{fact:1}
+  \normalfont Let $\{ 1, \cos mx, \sin mx : m = 1, 2, 3, \ldots \} = \mathcal F^*$.
+  \begin{enumerate}
+  \item For any two $f, g \in \mathcal F^*, f \neq g$,
+    \[ \int_{-\pi}^\pi f(x) g(x) dx = 0. \]
+    Note that
+    \begin{align*}
+      \cos mx \sin nx &= \frac{1}{2} (\sin (n + m)x + \sin (n - m)x), \\
+      \cos mx \cos nx &= \frac{1}{2} (\cos (n + m)x + \cos (n - m)x).
+    \end{align*}
+  \item If $f = g$,
+    \[ \int_{-\pi}^\pi 1^2 dx = 2\pi, \]
+    \[ \int_{-\pi}^\pi \cos^2 mx dx = \int_{-\pi}^\pi (1 + \cos 2mx) dx = \pi = \int_{-\pi}^\pi \sin^2 mx dx, \qquad m = 1, 2, 3, \ldots. \]
+  \end{enumerate}
+\end{fact}
+
+Integrate both sides on $[-\pi, \pi]$,
+\[ \int_{-\pi}^\pi T(x) dx = \alpha_0 \int_{-\pi}^\pi d(x) + \sum_{k = 1}^n \left(\alpha_k \underbrace{\int_{-\pi}^\pi \cos kx dx}_{= 0} + \beta_k \underbrace{\int_{-\pi}^\pi \sin kx dx}_{= 0}\right). \]
+Thus,
+\[ \alpha_0 = \frac{1}{2\pi} \int_{-\pi}^\pi T(x) dx = \frac{1}{2\pi} \langle T, 1 \rangle. \]
+To solve for $\alpha_m$, multiply both sides of \eqref{eq:*} by $\cos mx$:
+\[ \int_{-\pi}^\pi T(x) \cos mx dx = \alpha_m \int_{-\pi}^\pi \cos^2 mx + \underbrace{\ldots}_\text{all remaining integrals equal to $0$ by Fact \ref{fact:1}}, \]
+i.e.,
+\begin{align*}
+  \alpha_m &= \frac{1}{\pi} \int_{-\pi}^\pi T(x) \cos mx dx = \frac{1}{\pi} \langle T(\cdot), \cos(m \cdot) \rangle, \\
+  \beta_m &= \frac{1}{\pi} \int_{-\pi}^\pi T(x) \sin mx dx = \frac{1}{\pi} \langle T(\cdot), \sin(m \cdot) \rangle.
+\end{align*}
+Here,
+\[ \langle f, g \rangle = \int_{-\pi}^\pi f(x) g(x) dx. \]
+We have just shown that for a trignometric polynomial $T$,
+\[ T(x) = \underbrace{\frac{\langle T, 1 \rangle}{2\pi}}_{= \alpha_0} + \sum_{k = 1}^n \left(\underbrace{\frac{\langle T(\cdot), \cos (k \cdot) \rangle}{\pi}}_{= \alpha_k} \cos kx + \underbrace{\frac{\langle T(\cdot), \sin (k \cdot) \rangle}{\pi}}_{= \beta_k} \sin kx\right). \]
+
+\begin{enumerate}
+\item Is the representation unique?
+\item Can we do this for larger classes of functions, say $\mathcal C^{2\pi}$?
+\end{enumerate}
+
+\begin{defn}
+  \normalfont Let $f \in \mathcal C^{2\pi}$, or more generally $f \in \mathcal R[-\pi, \pi]$. Define
+  \begin{equation} \label{eq:**} \tag{**}
+    \left\{
+    \begin{array}{lcl}
+      \alpha_0 &=& \frac{\langle f, 1 \rangle}{2\pi} = \frac{1}{2\pi} \int_{-\pi}^\pi f(x) dx, \\
+      \alpha_m &=& \frac{\langle f(\cdot), \cos(m \cdot) \rangle}{\pi} = \frac{1}{\pi} \int_{-\pi}^\pi f(x) \cos mx dx, \qquad m = 1, 2, \ldots, \\
+      \beta_m &=& \frac{\langle f(\cdot), \sin(m \cdot) \rangle}{\pi} = \frac{1}{\pi} \int_{-\pi}^\pi f(x) \sin mx dx, \qquad m = 1, 2, \ldots.
+    \end{array}
+    \right.
+  \end{equation}
+  Note: $\alpha_m, \beta_m$ could be nonzero for infinitely many $m$ (unlike trignometric polynomials $T$).
+\end{defn}
+
+\noindent {\bf Question:} Is it possible that the {\bf Fourier series} of $f$, where $\alpha_k, \beta_k$ are defined in \eqref{eq:**}, defined by \fbox{$\alpha_0 + \sum_{k = 1}^\infty (\alpha_k \cos kx + \beta_k \sin kx)$}, converges for every $f \in \mathcal C^{2\pi}$ (or $\mathcal R[-\pi, \pi]$)?
+
+If so, can it be true that
+\begin{equation} \label{eq:1}
+  f(x) = \alpha_0 + \sum_{k = 0}^\infty (\alpha_k \cos kx + \beta_k \sin kx), \qquad \forall x \in [-\pi, \pi].
+\end{equation}
+
+\begin{remark}
+  \normalfont False, even for $f \in \mathcal C^{2\pi}$: there exists $f \in \mathcal C^{2\pi}$ such that the partial sums of the right-hand side of \eqref{eq:1} goes to $\infty$.
+
+  Why does this not contradict WS $2^\text{nd}$ theorem?
+\end{remark}
+
+\end{document}
